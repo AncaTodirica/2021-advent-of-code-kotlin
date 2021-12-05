@@ -5,27 +5,21 @@ import readInput
 fun main() {
 
     fun increasingMeasurements(measurements: List<String>): Int {
-        var counter = measurements.size - 1
-        for (index in 1 until measurements.size) {
-            if (measurements[index].toInt() < measurements[index - 1].toInt()) {
-                counter--
-            }
-        }
-        return counter
+        return measurements
+            .map { it.toInt() }
+            .filterIndexed { index, value -> index > 0 && measurements[index - 1].toInt() < value }
+            .size
     }
 
     fun increasingMeasurementsSlidingWindow(measurements: List<String>): Int {
-        var counter = 0
-        for (index in 0..measurements.size - 4) {
-            val window1 =
-                measurements[index].toInt() + measurements[index + 1].toInt() + measurements[index + 2].toInt()
-            val window2 =
-                measurements[index + 1].toInt() + measurements[index + 2].toInt() + measurements[index + 3].toInt()
-            if (window2 > window1) {
-                counter++
-            }
-        }
-        return counter
+        val windowsSums = measurements
+            .map { it.toInt() }
+            .windowed(3, 1)
+            .map { it.sum() }
+
+        return windowsSums
+            .filterIndexed { index, value -> index > 0 && value > windowsSums[index - 1] }
+            .size
     }
 
     // test if implementation meets criteria from the description, like:
